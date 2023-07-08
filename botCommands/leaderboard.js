@@ -15,7 +15,7 @@ const leaderboard = {
       const limitString = content.split(' ').find((word) => word.includes('n='));
       let limit = limitString ? limitString.replace('n=', '') : 5;
 
-      const response = await axios.get(`https://www.theodinproject.com/api/points?offset=${offset}&limit=${limit}`);
+      const response = await axios.get(`http://localhost:3000/api/points?offset=${offset}&limit=${limit}`);
       const users = response.data;
 
       let usersList = '';

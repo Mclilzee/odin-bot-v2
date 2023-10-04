@@ -8,7 +8,7 @@ const command = {
     if (authorID === author.id) {
       messagesCount++;
       if (timeoutID === undefined) {
-        timeoutID = setTimeout(() => messagesCount = 0, 10000);
+        timeoutID = setTimeout(() => messagesCount = 0, 30000);
       }
     } else {
       if (timeoutID !== undefined) {
@@ -19,6 +19,7 @@ const command = {
     }
 
     if (messagesCount >= 5) {
+      messagesCount = 0;
       return "Stop it!! that's illegal you can't chat bomb";
     }
 

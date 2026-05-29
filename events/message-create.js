@@ -82,7 +82,10 @@ module.exports = {
         spamAction = SpamKickingService.kick;
       }
 
-      await message.delete();
+      try {
+        await message.delete();
+        // eslint-disable-next-line no-empty
+      } catch {}
       if (spamAction) spamAction(message.member);
       return;
     }

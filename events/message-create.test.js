@@ -37,6 +37,15 @@ describe('Spam detection', () => {
     };
   }
 
+  it('still warns user if message deletion fails', async () => {
+    const message = createSpamMessage();
+    message.delete = jest
+      .fn()
+      .mockRejectedValue(new Error('Missing Permissions'));
+    await execute(message);
+    expect(SpamKickingService.warn).toHaveBeenCalledTimes(1);
+  });
+
   it('deletes message on spam offense', async () => {
     const message = createSpamMessage();
     await execute(message);

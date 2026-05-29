@@ -13,8 +13,8 @@ const warnedSpammers = new Map();
 
 setInterval(() => {
   const now = Date.now();
-  for (const [userId, entry] of warnedSpammers) {
-    if (now - entry.timestamp >= WARN_EXPIRY_MS) {
+  for (const [userId, warnedAt] of warnedSpammers) {
+    if (now - warnedAt >= WARN_EXPIRY_MS) {
       warnedSpammers.delete(userId);
     }
   }
@@ -64,29 +64,23 @@ module.exports = {
 
     // Kick people who posts more than 4 attachments
     if (!isAdminMessage && message.attachments.size >= 4) {
-      const entry = warnedSpammers.get(message.author.id);
-      const isActive = entry && Date.now() - entry.timestamp < WARN_EXPIRY_MS;
+      const warnedAt = warnedSpammers.get(message.author.id);
+      const isActive = warnedAt && Date.now() - warnedAt < WARN_EXPIRY_MS;
 
-      let spamAction = null;
       if (!isActive) {
-        warnedSpammers.set(message.author.id, {
-          timestamp: Date.now(),
-          kicked: false,
-        });
-        spamAction = SpamKickingService.warn;
-      } else if (!entry.kicked) {
-        warnedSpammers.set(message.author.id, {
-          timestamp: entry.timestamp,
-          kicked: true,
-        });
-        spamAction = SpamKickingService.kick;
+        warnedSpammers.set(message.author.id, Date.now());
       }
 
       try {
         await message.delete();
         // eslint-disable-next-line no-empty
       } catch {}
-      if (spamAction) spamAction(message.member);
+
+      if (isActive) {
+        SpamKickingService.kick(message.member);
+      } else {
+        SpamKickingService.warn(message.member);
+      }
       return;
     }
 

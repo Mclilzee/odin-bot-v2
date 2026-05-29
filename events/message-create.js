@@ -8,7 +8,8 @@ const botCommands = [];
 
 let authorBuffer = [];
 
-const warnedSpammers = new Set();
+const WARN_EXPIRY_MS = 24 * 60 * 60 * 1000;
+const warnedSpammers = new Map();
 
 let currentIntroductionsMessage = null;
 
@@ -55,11 +56,12 @@ module.exports = {
     // Kick people who posts more than 4 attachments
     if (!isAdminMessage && message.attachments.size >= 4) {
       await message.delete();
-      if (warnedSpammers.has(message.author.id)) {
+      const warnedAt = warnedSpammers.get(message.author.id);
+      if (warnedAt && Date.now() - warnedAt < WARN_EXPIRY_MS) {
         warnedSpammers.delete(message.author.id);
         SpamKickingService.kick(message.member);
       } else {
-        warnedSpammers.add(message.author.id);
+        warnedSpammers.set(message.author.id, Date.now());
         SpamKickingService.warn(message.member);
       }
       return;

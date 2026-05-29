@@ -8,6 +8,8 @@ const botCommands = [];
 
 let authorBuffer = [];
 
+const warnedSpammers = new Set();
+
 let currentIntroductionsMessage = null;
 
 const introductionsWelcomeMessage = `Welcome to The Odin Project! Take a moment to survey all of the channels on the sidebar, especially the <#${config.channels.FAQChannelId}> channel for answers to commonly asked questions. We're excited for you to join us on your programming journey. Happy learning!`;
@@ -52,7 +54,14 @@ module.exports = {
 
     // Kick people who posts more than 4 attachments
     if (!isAdminMessage && message.attachments.size >= 4) {
-      SpamKickingService.kick(message.member);
+      await message.delete();
+      if (warnedSpammers.has(message.author.id)) {
+        warnedSpammers.delete(message.author.id);
+        SpamKickingService.kick(message.member);
+      } else {
+        warnedSpammers.add(message.author.id);
+        SpamKickingService.warn(message.member);
+      }
       return;
     }
 

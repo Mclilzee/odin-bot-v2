@@ -11,6 +11,15 @@ let authorBuffer = [];
 const WARN_EXPIRY_MS = 24 * 60 * 60 * 1000;
 const warnedSpammers = new Map();
 
+setInterval(() => {
+  const now = Date.now();
+  for (const [userId, entry] of warnedSpammers) {
+    if (now - entry.timestamp >= WARN_EXPIRY_MS) {
+      warnedSpammers.delete(userId);
+    }
+  }
+}, WARN_EXPIRY_MS);
+
 let currentIntroductionsMessage = null;
 
 const introductionsWelcomeMessage = `Welcome to The Odin Project! Take a moment to survey all of the channels on the sidebar, especially the <#${config.channels.FAQChannelId}> channel for answers to commonly asked questions. We're excited for you to join us on your programming journey. Happy learning!`;
@@ -55,15 +64,26 @@ module.exports = {
 
     // Kick people who posts more than 4 attachments
     if (!isAdminMessage && message.attachments.size >= 4) {
-      await message.delete();
-      const warnedAt = warnedSpammers.get(message.author.id);
-      if (warnedAt && Date.now() - warnedAt < WARN_EXPIRY_MS) {
-        warnedSpammers.delete(message.author.id);
-        SpamKickingService.kick(message.member);
-      } else {
-        warnedSpammers.set(message.author.id, Date.now());
-        SpamKickingService.warn(message.member);
+      const entry = warnedSpammers.get(message.author.id);
+      const isActive = entry && Date.now() - entry.timestamp < WARN_EXPIRY_MS;
+
+      let spamAction = null;
+      if (!isActive) {
+        warnedSpammers.set(message.author.id, {
+          timestamp: Date.now(),
+          kicked: false,
+        });
+        spamAction = SpamKickingService.warn;
+      } else if (!entry.kicked) {
+        warnedSpammers.set(message.author.id, {
+          timestamp: entry.timestamp,
+          kicked: true,
+        });
+        spamAction = SpamKickingService.kick;
       }
+
+      await message.delete();
+      if (spamAction) spamAction(message.member);
       return;
     }
 

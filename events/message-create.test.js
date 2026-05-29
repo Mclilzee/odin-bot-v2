@@ -57,6 +57,22 @@ describe('Spam detection', () => {
     expect(SpamKickingService.kick).toHaveBeenCalledTimes(1);
   });
 
+  it('kicks user when spam messages arrive simultaneously across channels', async () => {
+    const message1 = createSpamMessage();
+    const message2 = createSpamMessage();
+    await Promise.all([execute(message1), execute(message2)]);
+    expect(SpamKickingService.warn).toHaveBeenCalledTimes(1);
+    expect(SpamKickingService.kick).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not warn or kick again when already kicked user spams simultaneously in more channels', async () => {
+    const messages = Array.from({ length: 5 }, () => createSpamMessage());
+    await Promise.all(messages.map(execute));
+    expect(SpamKickingService.warn).toHaveBeenCalledTimes(1);
+    expect(SpamKickingService.kick).toHaveBeenCalledTimes(1);
+    messages.forEach((m) => expect(m.delete).toHaveBeenCalledTimes(1));
+  });
+
   it('warns user again after 24 hours have passed since first offense', async () => {
     const message = createSpamMessage();
     await execute(message);

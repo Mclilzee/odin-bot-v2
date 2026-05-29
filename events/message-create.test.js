@@ -1,4 +1,4 @@
-const { Guild, GuildMember, Role } = require('../utils/mocks/discord');
+const { Guild, GuildMember, Message, Role } = require('../utils/mocks/discord');
 
 jest.mock('../services/spam-kick/spammer-kick-service', () => ({
   kick: jest.fn(),
@@ -29,12 +29,11 @@ describe('Spam detection', () => {
       guild,
       roles: [new Role(0, 'casual-user')],
     });
-    return {
+    return new Message({
       author: member.user,
-      attachments: { size: 4 },
       member,
-      delete: jest.fn(),
-    };
+      attachments: { size: 4 },
+    });
   }
 
   it('still warns user if message deletion fails', async () => {

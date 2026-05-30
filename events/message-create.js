@@ -64,21 +64,19 @@ module.exports = {
 
     // Kick people who posts more than 4 attachments
     if (!isAdminMessage && message.attachments.size >= 4) {
-      const warnedAt = warnedSpammers.get(message.author.id);
-      const isActive = warnedAt && Date.now() - warnedAt < WARN_EXPIRY_MS;
-
-      if (!isActive) {
-        warnedSpammers.set(message.author.id, Date.now());
-      }
-
       try {
+        // Deleting a message that has been already deleted by other bots will throw an error, we ignore it in that case
         await message.delete();
         // eslint-disable-next-line no-empty
       } catch {}
 
+      const warnedAt = warnedSpammers.get(message.author.id);
+      const isActive = warnedAt && Date.now() - warnedAt < WARN_EXPIRY_MS;
+
       if (isActive) {
         SpamKickingService.kick(message.member);
       } else {
+        warnedSpammers.set(message.author.id, Date.now());
         SpamKickingService.warn(message.member);
       }
       return;

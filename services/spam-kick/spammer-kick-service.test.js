@@ -27,9 +27,9 @@ function getChannels() {
   ];
 }
 
-function createMemberMock(guild, roleName) {
+function createMemberMock(guild, role) {
   const id = '123';
-  const roles = [new Role(0, roleName)];
+  const roles = [role];
   const username = 'bad.spammer';
   return new GuildMember({ id, username, guild, roles });
 }
@@ -38,7 +38,7 @@ describe('Kicking spammer', () => {
   let member;
   beforeEach(() => {
     const guild = new Guild({ channels: getChannels() });
-    member = createMemberMock(guild, 'casual-user');
+    member = createMemberMock(guild, new Role(0, 'casual-user'));
   });
 
   it('Kicks spammer service kicks with correct message', async () => {
@@ -78,7 +78,7 @@ describe('Kicking spammer', () => {
   it('Does not kick admin roles', async () => {
     console.error = jest.fn();
     const guild = new Guild({ channels: getChannels() });
-    const member = createMemberMock(guild, 'admin');
+    const member = createMemberMock(guild, Role.admin);
     await SpamKickingService.kick(member);
     expect(member.send).not.toHaveBeenCalled();
     expect(member.kick).not.toHaveBeenCalled();
@@ -95,7 +95,7 @@ describe('Kicking spammer', () => {
     console.error = jest.fn();
     const channels = [new TextChannel('1234')];
     const guild = new Guild({ channels });
-    member = createMemberMock(guild, 'james-bond');
+    member = createMemberMock(guild, new Role(1, 'james-bond'));
     await SpamKickingService.kick(member);
 
     expect(console.error).toHaveBeenCalledTimes(1);
@@ -108,7 +108,7 @@ describe('Warning spammer', () => {
   let member;
   beforeEach(() => {
     const guild = new Guild({ channels: getChannels() });
-    member = createMemberMock(guild, 'casual-user');
+    member = createMemberMock(guild, new Role(0, 'casual-user'));
   });
 
   it('Warned spammer is informed about the warning in DM', async () => {
@@ -132,7 +132,7 @@ describe('Warning spammer', () => {
   it('Does not warn admin roles', async () => {
     console.error = jest.fn();
     const guild = new Guild({ channels: getChannels() });
-    const member = createMemberMock(guild, 'admin');
+    const member = createMemberMock(guild, Role.admin);
     await SpamKickingService.warn(member);
     expect(member.send).not.toHaveBeenCalled();
     member.guild.channels.cache.forEach((channel) => {
@@ -161,7 +161,7 @@ describe('Warning spammer', () => {
     console.error = jest.fn();
     const channels = [new TextChannel('1234')];
     const guild = new Guild({ channels });
-    member = createMemberMock(guild, 'james-bond');
+    member = createMemberMock(guild, new Role(1, 'james-bond'));
     await SpamKickingService.warn(member);
 
     expect(console.error).toHaveBeenCalledTimes(1);

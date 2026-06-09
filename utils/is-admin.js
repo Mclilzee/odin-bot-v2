@@ -1,8 +1,15 @@
 const { roles } = require('../config');
 
+const adminRoleIds = [
+  roles.admin.id,
+  roles.core.id,
+  roles.maintainer.id,
+  roles.moderator.id,
+];
+
 function isAdmin(member) {
   return member?.roles.cache.some((role) =>
-    roles.adminRolesName.includes(role.name),
+    adminRoleIds.some((id) => role.id === id),
   );
 }
 

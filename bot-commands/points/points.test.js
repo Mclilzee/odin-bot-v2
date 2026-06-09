@@ -669,7 +669,7 @@ describe('?++ callback', () => {
     points: 10,
   };
   const author = {
-    member: new GuildMember({ id: 1, roles: [new Role(1, 'core')] }),
+    member: new GuildMember({ id: 1, roles: [Role.core] }),
     points: 10,
   };
 

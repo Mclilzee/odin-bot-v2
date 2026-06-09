@@ -1,4 +1,5 @@
 const SpamBanningService = require('./spam-banning.service');
+const { Role } = require('../../utils/mocks/discord');
 const config = require('../../config');
 
 beforeAll(() => {
@@ -334,7 +335,7 @@ describe('Attempting to ban a bot or team member', () => {
   });
 
   it('Does not ban moderators', async () => {
-    interactionMock.message.member.roles.cache = [{ name: 'moderator' }];
+    interactionMock.message.member.roles.cache = [Role.moderator];
     await SpamBanningService.handleInteraction(interactionMock);
     expect(interactionMock.guild.members.ban).not.toHaveBeenCalled();
     expect(interactionMock.message.author.send).not.toHaveBeenCalled();
@@ -343,7 +344,7 @@ describe('Attempting to ban a bot or team member', () => {
   });
 
   it('Does not ban maintainers', async () => {
-    interactionMock.message.member.roles.cache = [{ name: 'maintainer' }];
+    interactionMock.message.member.roles.cache = [Role.maintainer];
     await SpamBanningService.handleInteraction(interactionMock);
     expect(interactionMock.guild.members.ban).not.toHaveBeenCalled();
     expect(interactionMock.message.author.send).not.toHaveBeenCalled();
@@ -352,7 +353,7 @@ describe('Attempting to ban a bot or team member', () => {
   });
 
   it('Does not ban core', async () => {
-    interactionMock.message.member.roles.cache = [{ name: 'core' }];
+    interactionMock.message.member.roles.cache = [Role.core];
     await SpamBanningService.handleInteraction(interactionMock);
     expect(interactionMock.guild.members.ban).not.toHaveBeenCalled();
     expect(interactionMock.message.author.send).not.toHaveBeenCalled();
@@ -361,7 +362,7 @@ describe('Attempting to ban a bot or team member', () => {
   });
 
   it('Does not ban admins', async () => {
-    interactionMock.message.member.roles.cache = [{ name: 'admin' }];
+    interactionMock.message.member.roles.cache = [Role.admin];
     await SpamBanningService.handleInteraction(interactionMock);
     expect(interactionMock.guild.members.ban).not.toHaveBeenCalled();
     expect(interactionMock.message.author.send).not.toHaveBeenCalled();

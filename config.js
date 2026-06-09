@@ -28,9 +28,30 @@ const config = {
       process.env.AUTOMOD_BLOCK_CHANNEL_ID || '902580242881859654',
   },
   roles: {
-    NOBOTRoleId: '783764176178774036',
-    adminRolesName: ['core', 'maintainer', 'admin', 'moderator'],
-    backer: '1134874972339327087',
+    backer: {
+      name: 'backer',
+      id: '1134874972339327087',
+    },
+    core: {
+      name: 'core',
+      id: '704888900124016771',
+    },
+    maintainer: {
+      name: 'maintainer',
+      id: '505094421583233024',
+    },
+    admin: {
+      name: 'admin',
+      id: '692407258667155586',
+    },
+    moderator: {
+      name: 'moderator',
+      id: '892167320695361567',
+    },
+    nobot: {
+      name: 'nobot',
+      id: '783764176178774036',
+    },
   },
   modmailUserId: '575252669443211264',
   botUserId: '513097121482932253',

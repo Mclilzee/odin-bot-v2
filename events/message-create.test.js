@@ -27,7 +27,7 @@ describe('Spam detection', () => {
       id: authorId,
       username: 'spammer',
       guild,
-      roles: [new Role(0, 'casual-user')],
+      roles: [new Role('0', 'casual-user')],
     });
     return new Message({
       author: member.user,

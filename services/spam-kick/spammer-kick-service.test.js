@@ -38,7 +38,7 @@ describe('Kicking spammer', () => {
   let member;
   beforeEach(() => {
     const guild = new Guild({ channels: getChannels() });
-    member = createMemberMock(guild, new Role(0, 'casual-user'));
+    member = createMemberMock(guild, new Role('0', 'casual-user'));
   });
 
   it('Kicks spammer service kicks with correct message', async () => {
@@ -95,7 +95,7 @@ describe('Kicking spammer', () => {
     console.error = jest.fn();
     const channels = [new TextChannel('1234')];
     const guild = new Guild({ channels });
-    member = createMemberMock(guild, new Role(1, 'james-bond'));
+    member = createMemberMock(guild, new Role('1', 'james-bond'));
     await SpamKickingService.kick(member);
 
     expect(console.error).toHaveBeenCalledTimes(1);
@@ -108,7 +108,7 @@ describe('Warning spammer', () => {
   let member;
   beforeEach(() => {
     const guild = new Guild({ channels: getChannels() });
-    member = createMemberMock(guild, new Role(0, 'casual-user'));
+    member = createMemberMock(guild, new Role('0', 'casual-user'));
   });
 
   it('Warned spammer is informed about the warning in DM', async () => {
@@ -161,7 +161,7 @@ describe('Warning spammer', () => {
     console.error = jest.fn();
     const channels = [new TextChannel('1234')];
     const guild = new Guild({ channels });
-    member = createMemberMock(guild, new Role(1, 'james-bond'));
+    member = createMemberMock(guild, new Role('1', 'james-bond'));
     await SpamKickingService.warn(member);
 
     expect(console.error).toHaveBeenCalledTimes(1);

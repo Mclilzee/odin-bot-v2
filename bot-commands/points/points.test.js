@@ -664,7 +664,7 @@ describe('?++ callback', () => {
   const nonStaffAuthor = {
     member: new GuildMember({
       id: 1,
-      roles: [new Role(0, '@everyone')],
+      roles: [new Role('0', '@everyone')],
     }),
     points: 10,
   };

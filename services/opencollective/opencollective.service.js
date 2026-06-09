@@ -15,7 +15,7 @@ class OpenCollectiveService {
   static redisKeyForVerifiedOpenCollectiveUsernames = 'verified_oc_usernames';
 
   static async handleInteraction(interaction) {
-    if (interaction.member.roles.cache.has(config.roles.backer)) {
+    if (interaction.member.roles.cache.has(config.roles.backer.id)) {
       return interaction.reply({
         content: 'You already have the Backer role!',
         flags: MessageFlags.Ephemeral,
@@ -49,7 +49,7 @@ class OpenCollectiveService {
         OpenCollectiveService.redisKeyForVerifiedOpenCollectiveUsernames,
         username,
       );
-      await interaction.member.roles.add(config.roles.backer);
+      await interaction.member.roles.add(config.roles.backer.id);
       return interaction.reply({
         content: OpenCollectiveService.successMessage,
         flags: MessageFlags.Ephemeral,

@@ -5,6 +5,7 @@ class Role {
   static core = new Role(roles.core.id, roles.core.name);
   static maintainer = new Role(roles.maintainer.id, roles.maintainer.name);
   static moderator = new Role(roles.moderator.id, roles.moderator.name);
+  static nobot = new Role(roles.nobot.id, roles.nobot.name);
 
   constructor(id, name) {
     this.id = id;

@@ -83,7 +83,7 @@ module.exports = {
     }
 
     const isMessageAuthorNobot = message.member?.roles.cache.has(
-      config.roles.NOBOTRoleId,
+      config.roles.nobot.id,
     );
 
     // can't bot if user is NOBOT

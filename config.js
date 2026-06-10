@@ -52,6 +52,10 @@ const config = {
       name: 'NOBOT',
       id: '783764176178774036',
     },
+    club40: {
+      name: 'club-40',
+      id: '707225790546444288',
+    },
   },
 
   users: {

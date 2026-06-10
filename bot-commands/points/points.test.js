@@ -215,12 +215,12 @@ describe('award points', () => {
 });
 
 describe('callback', () => {
-  const author = { member: new GuildMember({ id: 1 }), points: 10 };
+  const author = { member: new GuildMember({ id: '1' }), points: 10 };
   const channel = new TextChannel();
   const club40Channel = new TextChannel('707225752608964628');
 
   it('returns correct output for a single user w/o club-40', async () => {
-    const mentionedUser = { member: new GuildMember({ id: 2 }), points: 20 };
+    const mentionedUser = { member: new GuildMember({ id: '2' }), points: 20 };
     // users must be passed in as an array
     const client = new Client({
       users: [author.member.user, mentionedUser.member.user],
@@ -250,7 +250,7 @@ describe('callback', () => {
   });
 
   it('returns correct output for a single user entering club-40', async () => {
-    const mentionedUser = { member: new GuildMember({ id: 2 }), points: 39 };
+    const mentionedUser = { member: new GuildMember({ id: '2' }), points: 39 };
     const client = new Client({
       users: [author.member.user, mentionedUser.member.user],
       channels: [channel, club40Channel],
@@ -281,7 +281,7 @@ describe('callback', () => {
   });
 
   it('returns correct output for a single user re-entering club-40', async () => {
-    const mentionedUser = { member: new GuildMember({ id: 2 }), points: 40 };
+    const mentionedUser = { member: new GuildMember({ id: '2' }), points: 40 };
     const client = new Client({
       users: [author.member.user, mentionedUser.member.user],
       channels: [channel, club40Channel],
@@ -313,12 +313,12 @@ describe('callback', () => {
 
   it('returns correct output for up to five mentioned users', async () => {
     const mentionedUser1 = {
-      member: new GuildMember({ id: 2 }),
+      member: new GuildMember({ id: '2' }),
       points: 33,
     };
-    const mentionedUser2 = { member: new GuildMember({ id: 3 }), points: 21 };
-    const mentionedUser3 = { member: new GuildMember({ id: 4 }), points: 2 };
-    const mentionedUser4 = { member: new GuildMember({ id: 5 }), points: 0 };
+    const mentionedUser2 = { member: new GuildMember({ id: '3' }), points: 21 };
+    const mentionedUser3 = { member: new GuildMember({ id: '4' }), points: 2 };
+    const mentionedUser4 = { member: new GuildMember({ id: '5' }), points: 0 };
     const client = new Client({
       users: [
         author.member.user,
@@ -384,7 +384,7 @@ describe('callback', () => {
 
   describe('where one user is mentioned more than once', () => {
     it('returns correct output for only 1 user mentioned twice', async () => {
-      const mentionedUser = { member: new GuildMember({ id: 2 }), points: 5 };
+      const mentionedUser = { member: new GuildMember({ id: '2' }), points: 5 };
       const client = new Client({
         users: [author.member.user, mentionedUser.member.user],
         channels: [channel],
@@ -415,7 +415,7 @@ describe('callback', () => {
     });
 
     it('returns correct output for only 1 user mentioned more than 5 times', async () => {
-      const mentionedUser = { member: new GuildMember({ id: 2 }), points: 5 };
+      const mentionedUser = { member: new GuildMember({ id: '2' }), points: 5 };
       const client = new Client({
         users: [author.member.user, mentionedUser.member.user],
         channels: [channel],
@@ -450,8 +450,14 @@ describe('callback', () => {
     });
 
     it('returns correct output for 1 user mentioned more than once with another user', async () => {
-      const mentionedUser1 = { member: new GuildMember({ id: 2 }), points: 21 };
-      const mentionedUser2 = { member: new GuildMember({ id: 3 }), points: 23 };
+      const mentionedUser1 = {
+        member: new GuildMember({ id: '2' }),
+        points: 21,
+      };
+      const mentionedUser2 = {
+        member: new GuildMember({ id: '3' }),
+        points: 23,
+      };
       const client = new Client({
         users: [
           author.member.user,
@@ -496,12 +502,12 @@ describe('callback', () => {
   });
 
   it('returns correct output for more than five mentioned users', async () => {
-    const mentionedUser1 = { member: new GuildMember({ id: 2 }), points: 10 };
-    const mentionedUser2 = { member: new GuildMember({ id: 3 }), points: 3 };
-    const mentionedUser3 = { member: new GuildMember({ id: 4 }), points: 1 };
-    const mentionedUser4 = { member: new GuildMember({ id: 5 }), points: 0 };
-    const mentionedUser5 = { member: new GuildMember({ id: 6 }), points: 21 };
-    const mentionedUser6 = { member: new GuildMember({ id: 7 }), points: 29 };
+    const mentionedUser1 = { member: new GuildMember({ id: '2' }), points: 10 };
+    const mentionedUser2 = { member: new GuildMember({ id: '3' }), points: 3 };
+    const mentionedUser3 = { member: new GuildMember({ id: '4' }), points: 1 };
+    const mentionedUser4 = { member: new GuildMember({ id: '5' }), points: 0 };
+    const mentionedUser5 = { member: new GuildMember({ id: '6' }), points: 21 };
+    const mentionedUser6 = { member: new GuildMember({ id: '7' }), points: 29 };
     const client = new Client({
       users: [
         author.member.user,
@@ -623,7 +629,7 @@ describe('callback', () => {
   });
 
   it('returns correct output for a user awarding points in a no-points channel', async () => {
-    const mentionedUser = { member: new GuildMember({ id: 2 }), points: 20 };
+    const mentionedUser = { member: new GuildMember({ id: '2' }), points: 20 };
     const botSpamChannel = new TextChannel('513125912070455296');
     const bannedChannel = new TextChannel('123456789');
     const client = new Client({
@@ -663,13 +669,13 @@ describe('callback', () => {
 describe('?++ callback', () => {
   const nonStaffAuthor = {
     member: new GuildMember({
-      id: 1,
+      id: '1',
       roles: [new Role('0', '@everyone')],
     }),
     points: 10,
   };
   const author = {
-    member: new GuildMember({ id: 1, roles: [Role.core] }),
+    member: new GuildMember({ id: '1', roles: [Role.core] }),
     points: 10,
   };
 
@@ -677,7 +683,7 @@ describe('?++ callback', () => {
   const club40Channel = new TextChannel('707225752608964628');
 
   it('does not award points when used by non-staff', async () => {
-    const mentionedUser = { member: new GuildMember({ id: 2 }), points: 20 };
+    const mentionedUser = { member: new GuildMember({ id: '2' }), points: 20 };
     const client = new Client({
       users: [nonStaffAuthor.member.user, mentionedUser.member.user],
       channels: [channel],
@@ -707,7 +713,7 @@ describe('?++ callback', () => {
   });
 
   it('awards points when used by staff', async () => {
-    const mentionedUser = { member: new GuildMember({ id: 2 }), points: 20 };
+    const mentionedUser = { member: new GuildMember({ id: '2' }), points: 20 };
     const client = new Client({
       users: [author.member.user, mentionedUser.member.user],
       channels: [channel],
@@ -737,7 +743,7 @@ describe('?++ callback', () => {
   });
 
   it('returns correct output for a single user entering club-40', async () => {
-    const mentionedUser = { member: new GuildMember({ id: 2 }), points: 39 };
+    const mentionedUser = { member: new GuildMember({ id: '2' }), points: 39 };
     const client = new Client({
       users: [author.member.user, mentionedUser.member.user],
       channels: [channel, club40Channel],
@@ -769,7 +775,7 @@ describe('?++ callback', () => {
   });
 
   it('returns correct output for a single user re-entering club-40', async () => {
-    const mentionedUser = { member: new GuildMember({ id: 2 }), points: 40 };
+    const mentionedUser = { member: new GuildMember({ id: '2' }), points: 40 };
     const client = new Client({
       users: [author.member.user, mentionedUser.member.user],
       channels: [channel, club40Channel],
@@ -801,10 +807,10 @@ describe('?++ callback', () => {
   });
 
   it('returns correct output for up to five mentioned users', async () => {
-    const mentionedUser1 = { member: new GuildMember({ id: 2 }), points: 33 };
-    const mentionedUser2 = { member: new GuildMember({ id: 3 }), points: 21 };
-    const mentionedUser3 = { member: new GuildMember({ id: 4 }), points: 2 };
-    const mentionedUser4 = { member: new GuildMember({ id: 5 }), points: 0 };
+    const mentionedUser1 = { member: new GuildMember({ id: '2' }), points: 33 };
+    const mentionedUser2 = { member: new GuildMember({ id: '3' }), points: 21 };
+    const mentionedUser3 = { member: new GuildMember({ id: '4' }), points: 2 };
+    const mentionedUser4 = { member: new GuildMember({ id: '5' }), points: 0 };
     const client = new Client({
       users: [
         author.member.user,
@@ -869,12 +875,12 @@ describe('?++ callback', () => {
   });
 
   it('returns correct output for more than five mentioned users', async () => {
-    const mentionedUser1 = { member: new GuildMember({ id: 2 }), points: 10 };
-    const mentionedUser2 = { member: new GuildMember({ id: 3 }), points: 3 };
-    const mentionedUser3 = { member: new GuildMember({ id: 4 }), points: 1 };
-    const mentionedUser4 = { member: new GuildMember({ id: 5 }), points: 0 };
-    const mentionedUser5 = { member: new GuildMember({ id: 6 }), points: 21 };
-    const mentionedUser6 = { member: new GuildMember({ id: 7 }), points: 29 };
+    const mentionedUser1 = { member: new GuildMember({ id: '2' }), points: 10 };
+    const mentionedUser2 = { member: new GuildMember({ id: '3' }), points: 3 };
+    const mentionedUser3 = { member: new GuildMember({ id: '4' }), points: 1 };
+    const mentionedUser4 = { member: new GuildMember({ id: '5' }), points: 0 };
+    const mentionedUser5 = { member: new GuildMember({ id: '6' }), points: 21 };
+    const mentionedUser6 = { member: new GuildMember({ id: '7' }), points: 29 };
     const client = new Client({
       users: [
         author.member.user,
@@ -1003,7 +1009,7 @@ describe('?++ callback', () => {
   });
 
   it('returns correct output for a user awarding points in a no-points channel', async () => {
-    const mentionedUser = { member: new GuildMember({ id: 2 }), points: 20 };
+    const mentionedUser = { member: new GuildMember({ id: '2' }), points: 20 };
     const botSpamChannel = new TextChannel('513125912070455296');
     const bannedChannel = new TextChannel('123456789');
     const client = new Client({
@@ -1042,8 +1048,8 @@ describe('?++ callback', () => {
   });
 
   it('sends the correct exclamations for mixed awarding (++ and ?++) in a single message', async () => {
-    const mentionedUser1 = { member: new GuildMember({ id: 2 }), points: 0 };
-    const mentionedUser2 = { member: new GuildMember({ id: 3 }), points: 0 };
+    const mentionedUser1 = { member: new GuildMember({ id: '2' }), points: 0 };
+    const mentionedUser2 = { member: new GuildMember({ id: '3' }), points: 0 };
     const client = new Client({
       users: [
         author.member.user,

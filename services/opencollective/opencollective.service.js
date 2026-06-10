@@ -8,7 +8,7 @@ class OpenCollectiveService {
   static successMessage =
     'You have been given the Backer role, thanks for contributing!';
 
-  static failureMessage = `Oops! Something went wrong. Try again, or contact us through <@${config.modmailUserId}> with a link to your Open Collective profile (https://opencollective.com/YOURUSERNAME) so we can assign the role manually.`;
+  static failureMessage = `Oops! Something went wrong. Try again, or contact us through <@${config.users.modmail.id}> with a link to your Open Collective profile (https://opencollective.com/YOURUSERNAME) so we can assign the role manually.`;
 
   static ourOpenCollectiveUsername = 'theodinproject';
 

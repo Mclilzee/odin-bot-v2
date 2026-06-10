@@ -1,11 +1,16 @@
-const { botUserId } = require('../../../config');
+const { users } = require('../../../config');
 const { Collection } = require('discord.js');
 const User = require('./user');
 
 class GuildMember {
+  static odinBot = new GuildMember({
+    id: users.odinBot.id,
+    username: users.odinBot.name,
+  });
+
   #roles = new Collection();
   constructor({ id, username, nickname, guild, roles = [] }) {
-    this.user = new User({ id, username });
+    this.user = new User(id, username);
     this.nickname = nickname;
     this.guild = guild;
     this.kick = jest.fn(async (msg) => msg);
@@ -15,10 +20,6 @@ class GuildMember {
     roles.forEach((role) => {
       this.#roles.set(role.id, role);
     });
-  }
-
-  static get odinBot() {
-    return new GuildMember({ id: botUserId });
   }
 
   get id() {

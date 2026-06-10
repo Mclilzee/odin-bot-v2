@@ -1,7 +1,7 @@
 const { RESTJSONErrorCodes } = require('discord-api-types/v10');
 const { EmbedBuilder, MessageFlags } = require('discord.js');
 const ThreadCreator = require('../utils/thread-creator');
-const { modmailUserId, channels } = require('../config');
+const { users, channels } = require('../config');
 
 class ModerationMessageDeleteService {
   static async handleInteraction(interaction) {
@@ -114,7 +114,7 @@ If further action is deemed necessary, a moderator will follow up on this messag
 Please make sure to check the rules of the server and the description of the channel you've posted in.
 You can find our rules including a link to the additional community expectations here <#${channels.rulesChannelId}>
 
-If after reading the rules, channel description or community expectations, you feel this deletion was made in error, feel free to send a dm to <@${modmailUserId}>`,
+If after reading the rules, channel description or community expectations, you feel this deletion was made in error, feel free to send a dm to <@${users.modmail.id}>`,
     );
 
     // Only add the field if we have content to show

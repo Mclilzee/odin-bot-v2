@@ -49,12 +49,21 @@ const config = {
       id: '892167320695361567',
     },
     nobot: {
-      name: 'nobot',
+      name: 'NOBOT',
       id: '783764176178774036',
     },
   },
-  modmailUserId: '575252669443211264',
-  botUserId: '513097121482932253',
+
+  users: {
+    modmail: {
+      name: 'ModMail',
+      id: '575252669443211264',
+    },
+    odinBot: {
+      name: 'odin-bot',
+      id: '513097121482932253',
+    },
+  },
   color: '#cc9543',
 };
 

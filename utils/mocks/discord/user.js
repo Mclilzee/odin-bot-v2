@@ -1,5 +1,8 @@
+const { users } = require('../../../config');
+
 class User {
-  constructor({ id, username }) {
+  static odinBot = new User(users.odinBot.id, users.odinBot.name);
+  constructor(id, username) {
     this.id = id;
     this.username = username;
   }

@@ -774,6 +774,38 @@ describe('?++ callback', () => {
     expect(data.channel.send.mock.calls[0][0]).toMatchSnapshot();
   });
 
+  it('Users gets club-40 role', async () => {
+    const mentionedUser = { member: new GuildMember({ id: '2' }), points: 39 };
+    const client = new Client({
+      users: [author.member.user, mentionedUser.member.user],
+      channels: [channel, club40Channel],
+    });
+    const guild = new Guild({
+      members: [author.member, mentionedUser.member],
+    });
+    const data = {
+      author: author.member.user,
+      content: `${mentionedUser.member.user} ?++`,
+      channel,
+      client,
+      guild,
+      member: author.member,
+    };
+
+    axios.post.mockResolvedValue({
+      data: {
+        ...mentionedUser.member.user,
+        points: (mentionedUser.points += 2),
+      },
+    });
+
+    expect(
+      mentionedUser.member.roles.cache.has(Role.club40.id),
+    ).not.toBeTruthy();
+    await awardPoints.cb(data);
+    expect(mentionedUser.member.roles.cache.has(Role.club40.id)).toBeTruthy();
+  });
+
   it('returns correct output for a single user re-entering club-40', async () => {
     const mentionedUser = { member: new GuildMember({ id: '2' }), points: 40 };
     const client = new Client({

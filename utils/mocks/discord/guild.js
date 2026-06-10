@@ -1,12 +1,17 @@
 const { Collection } = require('discord.js');
+const { users } = require('../../../config');
 const GuildMember = require('./guild-member');
 
 class Guild {
-  #members = new Collection().set(GuildMember.odinBot.id, GuildMember.odinBot);
+  #members = new Collection();
   #roles = new Collection().set(1, { name: 'club-40' });
   #channels = new Collection();
 
   constructor({ members = [], channels = [], roles = [] }) {
+    Object.values(users)
+      .map((user) => new GuildMember({ id: user.id, username: user.name }))
+      .forEach((member) => this.#members.set(member.id, member));
+
     members.forEach((member) => {
       this.#members.set(member.id, member);
     });

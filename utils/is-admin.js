@@ -8,9 +8,7 @@ const adminRoleIds = [
 ];
 
 function isAdmin(member) {
-  return member?.roles.cache.some((role) =>
-    adminRoleIds.some((id) => role.id === id),
-  );
+  return adminRoleIds.some((id) => member?.roles.cache.has(id));
 }
 
 module.exports = { isAdmin };

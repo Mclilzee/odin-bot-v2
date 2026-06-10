@@ -4,7 +4,7 @@ const GuildMember = require('./guild-member');
 const Role = require('./role');
 
 class Guild {
-  #members = new Collection();
+  #membersCollection = new Collection();
   #roles = new Collection();
   #channels = new Collection();
 
@@ -12,14 +12,14 @@ class Guild {
     // Filling out values that is known to exist on the server
     Object.values(config.users)
       .map((user) => new GuildMember({ id: user.id, username: user.name }))
-      .forEach((member) => this.#members.set(member.id, member));
+      .forEach((member) => this.#membersCollection.set(member.id, member));
 
     Object.values(config.roles)
       .map((role) => new Role(role.id, role.name))
       .forEach((role) => this.#roles.set(role.id, role));
 
     members.forEach((member) => {
-      this.#members.set(member.id, member);
+      this.#membersCollection.set(member.id, member);
     });
 
     channels.forEach((channel) => {
@@ -29,20 +29,20 @@ class Guild {
     roles.forEach((role) => {
       this.#roles.set(role.id, role);
     });
+
+    this.members = {
+      cache: this.#membersCollection,
+      // TODO: After points overhaul, update to only call it using user id and not user object
+      fetch: (user) => this.#membersCollection.get(user.id),
+      ban: jest.fn(),
+    };
   }
 
   get channels() {
     return {
       cache: this.#channels,
       fetch: (id) => this.#channels.get(id),
-    };
-  }
-
-  get members() {
-    return {
-      cache: this.#members,
-      // TODO: After points overhaul, update to only call it using user id and not user object
-      fetch: (user) => this.#members.get(user.id),
+      delete: (id) => this.#channels.delete(id),
     };
   }
 

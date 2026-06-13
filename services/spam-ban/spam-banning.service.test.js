@@ -3,7 +3,6 @@ const {
   Role,
   GuildMember,
   Message,
-  TextChannel,
   Guild,
 } = require('../../utils/mocks/discord');
 const config = require('../../config');
@@ -62,30 +61,17 @@ function createInteractionMock(message, guild) {
 function createMessageMock() {
   const member = new GuildMember({ id: '123', username: 'bad.spammer' });
   return new Message({
-    channelId: config.channels.automodBlockChannelId,
+    channelId: config.channels.automodBlock.id,
     author: member.user,
     member,
   });
-}
-
-function createGuildMock() {
-  const channels = [
-    new TextChannel(config.channels.moderationLogChannelId),
-    new TextChannel(config.channels.automodBlockChannelId),
-    new TextChannel('101010'),
-    new TextChannel('22223333'),
-    new TextChannel('2302382'),
-    new TextChannel('000000'),
-  ];
-
-  return new Guild({ channels });
 }
 
 describe('Banning spammer in automod channel', () => {
   let interactionMock;
   beforeEach(() => {
     const messageMock = createMessageMock();
-    const guildMock = createGuildMock();
+    const guildMock = new Guild();
     interactionMock = createInteractionMock(messageMock, guildMock);
   });
 
@@ -104,7 +90,7 @@ describe('Banning spammer in other channels', () => {
   beforeEach(() => {
     const messageMock = createMessageMock();
     messageMock.channelId = '123';
-    const guildMock = createGuildMock();
+    const guildMock = new Guild();
     interactionMock = createInteractionMock(messageMock, guildMock);
   });
 
@@ -163,7 +149,7 @@ describe('Banning spammer with DM enabled', () => {
   let interactionMock;
   beforeEach(() => {
     const messageMock = createMessageMock();
-    const guildMock = createGuildMock();
+    const guildMock = new Guild();
     interactionMock = createInteractionMock(messageMock, guildMock);
   });
 
@@ -193,7 +179,7 @@ describe('Banning spammer with DM enabled', () => {
   it('Sends log to the correct channel', async () => {
     await SpamBanningService.handleInteraction(interactionMock);
     interactionMock.guild.channels.cache.forEach((channel) => {
-      if (channel.id === config.channels.moderationLogChannelId) {
+      if (channel.id === config.channels.moderationLog.id) {
         expect(channel.send).toHaveBeenCalledTimes(1);
         expect(channel.send.mock.calls[0][0]).toMatchSnapshot();
       } else {
@@ -212,7 +198,7 @@ describe('Banning spammer who has DM set to private', () => {
   let interactionMock;
   beforeEach(() => {
     const messageMock = createMessageMock();
-    const guildMock = createGuildMock();
+    const guildMock = new Guild();
     messageMock.author.send = jest.fn(() => {
       throw new Error("Can't contact user");
     });
@@ -241,7 +227,7 @@ describe('Banning spammer who has DM set to private', () => {
   it('Sends log to the correct channel', async () => {
     await SpamBanningService.handleInteraction(interactionMock);
     interactionMock.guild.channels.cache.forEach((channel) => {
-      if (channel.id === config.channels.moderationLogChannelId) {
+      if (channel.id === config.channels.moderationLog.id) {
         expect(channel.send).toHaveBeenCalledTimes(1);
         expect(channel.send.mock.calls[0][0]).toMatchSnapshot();
       } else {
@@ -260,7 +246,7 @@ describe('Banning spammer that has left the server', () => {
   let interactionMock;
   beforeEach(() => {
     const messageMock = createMessageMock();
-    const guildMock = createGuildMock();
+    const guildMock = new Guild();
     messageMock.member = null;
     interactionMock = createInteractionMock(messageMock, guildMock);
   });
@@ -286,7 +272,7 @@ describe('Attempting to ban a bot or team member', () => {
   let interactionMock;
   beforeEach(() => {
     const messageMock = createMessageMock();
-    const guildMock = createGuildMock();
+    const guildMock = new Guild();
     interactionMock = createInteractionMock(messageMock, guildMock);
   });
 
@@ -300,7 +286,7 @@ describe('Attempting to ban a bot or team member', () => {
   });
 
   it('Does not ban moderators', async () => {
-    interactionMock.message.member.roles.add(Role.MODERATOR);
+    interactionMock.message.member.roles.add(Role.moderator);
     await SpamBanningService.handleInteraction(interactionMock);
     expect(interactionMock.guild.members.ban).not.toHaveBeenCalled();
     expect(interactionMock.message.author.send).not.toHaveBeenCalled();
@@ -309,7 +295,7 @@ describe('Attempting to ban a bot or team member', () => {
   });
 
   it('Does not ban maintainers', async () => {
-    interactionMock.message.member.roles.add(Role.MAINTAINER);
+    interactionMock.message.member.roles.add(Role.maintainer);
     await SpamBanningService.handleInteraction(interactionMock);
     expect(interactionMock.guild.members.ban).not.toHaveBeenCalled();
     expect(interactionMock.message.author.send).not.toHaveBeenCalled();
@@ -318,7 +304,7 @@ describe('Attempting to ban a bot or team member', () => {
   });
 
   it('Does not ban core', async () => {
-    interactionMock.message.member.roles.add(Role.CORE);
+    interactionMock.message.member.roles.add(Role.core);
     await SpamBanningService.handleInteraction(interactionMock);
     expect(interactionMock.guild.members.ban).not.toHaveBeenCalled();
     expect(interactionMock.message.author.send).not.toHaveBeenCalled();
@@ -327,7 +313,7 @@ describe('Attempting to ban a bot or team member', () => {
   });
 
   it('Does not ban admins', async () => {
-    interactionMock.message.member.roles.add(Role.ADMIN);
+    interactionMock.message.member.roles.add(Role.admin);
     await SpamBanningService.handleInteraction(interactionMock);
     expect(interactionMock.guild.members.ban).not.toHaveBeenCalled();
     expect(interactionMock.message.author.send).not.toHaveBeenCalled();
@@ -340,14 +326,14 @@ describe('Attempting to log banned user in moderation log channel', () => {
   let interactionMock;
   beforeEach(() => {
     const messageMock = createMessageMock();
-    const guildMock = createGuildMock();
+    const guildMock = new Guild();
     interactionMock = createInteractionMock(messageMock, guildMock);
   });
 
   it('Sends log to the correct channel', async () => {
     await SpamBanningService.handleInteraction(interactionMock);
     interactionMock.guild.channels.cache.forEach((channel) => {
-      if (channel.id === config.channels.moderationLogChannelId) {
+      if (channel.id === config.channels.moderationLog.id) {
         expect(channel.send).toHaveBeenCalledTimes(1);
         expect(channel.send.mock.calls[0][0]).toMatchSnapshot();
       } else {
@@ -358,9 +344,7 @@ describe('Attempting to log banned user in moderation log channel', () => {
 
   it("Error is handled if channel doesn't exist", async () => {
     console.error = jest.fn();
-    interactionMock.guild.channels.delete(
-      config.channels.moderationLogChannelId,
-    );
+    interactionMock.guild.channels.delete(config.channels.moderationLog.id);
     await SpamBanningService.handleInteraction(interactionMock);
     interactionMock.guild.channels.cache.forEach((channel) => {
       expect(channel.send).not.toHaveBeenCalled();

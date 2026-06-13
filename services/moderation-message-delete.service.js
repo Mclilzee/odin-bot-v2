@@ -112,7 +112,7 @@ Some common reasons for post removal include but isn't limited to;
 If further action is deemed necessary, a moderator will follow up on this message in a private thread.
 
 Please make sure to check the rules of the server and the description of the channel you've posted in.
-You can find our rules including a link to the additional community expectations here <#${channels.rulesChannelId}>
+You can find our rules including a link to the additional community expectations here <#${channels.rules.id}>
 
 If after reading the rules, channel description or community expectations, you feel this deletion was made in error, feel free to send a dm to <@${users.modmail.id}>`,
     );

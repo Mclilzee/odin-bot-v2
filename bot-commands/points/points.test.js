@@ -16,11 +16,6 @@ jest.mock('./club-40-gifs.json', () => [
     author: 'Sully',
   },
 ]);
-jest.mock('../../config', () => {
-  const actual = jest.requireActual('../../config');
-  actual.channels.noPointsChannelIds = ['513125912070455296', '123456789'];
-  return actual;
-});
 
 beforeEach(jest.clearAllMocks);
 
@@ -217,18 +212,16 @@ describe('award points', () => {
 describe('callback', () => {
   const author = { member: new GuildMember({ id: '1' }), points: 10 };
   const channel = new TextChannel();
-  const club40Channel = new TextChannel('707225752608964628');
+  const club40Channel = TextChannel.club40;
 
   it('returns correct output for a single user w/o club-40', async () => {
     const mentionedUser = { member: new GuildMember({ id: '2' }), points: 20 };
     // users must be passed in as an array
-    const client = new Client({
-      users: [author.member.user, mentionedUser.member.user],
-      channels: [channel],
-    });
-    const guild = new Guild({
-      members: [author.member, mentionedUser.member],
-    });
+    const client = new Client(
+      [author.member.user, mentionedUser.member.user],
+      [channel],
+    );
+    const guild = new Guild([author.member, mentionedUser.member]);
     const data = {
       author: author.member.user,
       content: `${mentionedUser.member.user} ++`,
@@ -251,13 +244,11 @@ describe('callback', () => {
 
   it('returns correct output for a single user entering club-40', async () => {
     const mentionedUser = { member: new GuildMember({ id: '2' }), points: 39 };
-    const client = new Client({
-      users: [author.member.user, mentionedUser.member.user],
-      channels: [channel, club40Channel],
-    });
-    const guild = new Guild({
-      members: [author.member, mentionedUser.member],
-    });
+    const client = new Client(
+      [author.member.user, mentionedUser.member.user],
+      [channel, club40Channel],
+    );
+    const guild = new Guild([author.member, mentionedUser.member]);
     const data = {
       author: author.member.user,
       content: `${mentionedUser.member.user} ++`,
@@ -282,13 +273,11 @@ describe('callback', () => {
 
   it('returns correct output for a single user re-entering club-40', async () => {
     const mentionedUser = { member: new GuildMember({ id: '2' }), points: 40 };
-    const client = new Client({
-      users: [author.member.user, mentionedUser.member.user],
-      channels: [channel, club40Channel],
-    });
-    const guild = new Guild({
-      members: [author.member, mentionedUser.member],
-    });
+    const client = new Client(
+      [author.member.user, mentionedUser.member.user],
+      [channel, club40Channel],
+    );
+    const guild = new Guild([author.member, mentionedUser.member]);
     const data = {
       author: author.member.user,
       content: `${mentionedUser.member.user} ++`,
@@ -319,25 +308,23 @@ describe('callback', () => {
     const mentionedUser2 = { member: new GuildMember({ id: '3' }), points: 21 };
     const mentionedUser3 = { member: new GuildMember({ id: '4' }), points: 2 };
     const mentionedUser4 = { member: new GuildMember({ id: '5' }), points: 0 };
-    const client = new Client({
-      users: [
+    const client = new Client(
+      [
         author.member.user,
         mentionedUser1.member.user,
         mentionedUser2.member.user,
         mentionedUser3.member.user,
         mentionedUser4.member.user,
       ],
-      channels: [channel],
-    });
-    const guild = new Guild({
-      members: [
-        author.member,
-        mentionedUser1.member,
-        mentionedUser2.member,
-        mentionedUser3.member,
-        mentionedUser4.member,
-      ],
-    });
+      [channel],
+    );
+    const guild = new Guild([
+      author.member,
+      mentionedUser1.member,
+      mentionedUser2.member,
+      mentionedUser3.member,
+      mentionedUser4.member,
+    ]);
 
     const data = {
       author: author.member.user,
@@ -385,13 +372,11 @@ describe('callback', () => {
   describe('where one user is mentioned more than once', () => {
     it('returns correct output for only 1 user mentioned twice', async () => {
       const mentionedUser = { member: new GuildMember({ id: '2' }), points: 5 };
-      const client = new Client({
-        users: [author.member.user, mentionedUser.member.user],
-        channels: [channel],
-      });
-      const guild = new Guild({
-        members: [author.member, mentionedUser.member],
-      });
+      const client = new Client(
+        [author.member.user, mentionedUser.member.user],
+        [channel],
+      );
+      const guild = new Guild([author.member, mentionedUser.member]);
       const data = {
         author: author.member.user,
         content: `${mentionedUser.member.user} ++ ${mentionedUser.member.user} ++`,
@@ -416,13 +401,11 @@ describe('callback', () => {
 
     it('returns correct output for only 1 user mentioned more than 5 times', async () => {
       const mentionedUser = { member: new GuildMember({ id: '2' }), points: 5 };
-      const client = new Client({
-        users: [author.member.user, mentionedUser.member.user],
-        channels: [channel],
-      });
-      const guild = new Guild({
-        members: [author.member, mentionedUser.member],
-      });
+      const client = new Client(
+        [author.member.user, mentionedUser.member.user],
+        [channel],
+      );
+      const guild = new Guild([author.member, mentionedUser.member]);
       const data = {
         author: author.member.user,
         content: `${mentionedUser.member.user} ++ ${mentionedUser.member.user} ++ ${mentionedUser.member.user} ++ ${mentionedUser.member.user} ++ ${mentionedUser.member.user} ++ ${mentionedUser.member.user} ++`,
@@ -458,17 +441,19 @@ describe('callback', () => {
         member: new GuildMember({ id: '3' }),
         points: 23,
       };
-      const client = new Client({
-        users: [
+      const client = new Client(
+        [
           author.member.user,
           mentionedUser1.member.user,
           mentionedUser2.member.user,
         ],
-        channels: [channel],
-      });
-      const guild = new Guild({
-        members: [author.member, mentionedUser1.member, mentionedUser2.member],
-      });
+        [channel],
+      );
+      const guild = new Guild([
+        author.member,
+        mentionedUser1.member,
+        mentionedUser2.member,
+      ]);
 
       const data = {
         author: author.member.user,
@@ -508,8 +493,8 @@ describe('callback', () => {
     const mentionedUser4 = { member: new GuildMember({ id: '5' }), points: 0 };
     const mentionedUser5 = { member: new GuildMember({ id: '6' }), points: 21 };
     const mentionedUser6 = { member: new GuildMember({ id: '7' }), points: 29 };
-    const client = new Client({
-      users: [
+    const client = new Client(
+      [
         author.member.user,
         mentionedUser1.member.user,
         mentionedUser2.member.user,
@@ -518,19 +503,17 @@ describe('callback', () => {
         mentionedUser5.member.user,
         mentionedUser6.member.user,
       ],
-      channels: [channel],
-    });
-    const guild = new Guild({
-      members: [
-        author.member,
-        mentionedUser1.member,
-        mentionedUser2.member,
-        mentionedUser3.member,
-        mentionedUser4.member,
-        mentionedUser5.member,
-        mentionedUser6.member,
-      ],
-    });
+      [channel],
+    );
+    const guild = new Guild([
+      author.member,
+      mentionedUser1.member,
+      mentionedUser2.member,
+      mentionedUser3.member,
+      mentionedUser4.member,
+      mentionedUser5.member,
+      mentionedUser6.member,
+    ]);
 
     const data = {
       author: author.member.user,
@@ -582,11 +565,8 @@ describe('callback', () => {
   });
 
   it('returns correct output for a user mentioning themselves', async () => {
-    const client = new Client({
-      users: [author.member.user],
-      channels: [channel],
-    });
-    const guild = new Guild({ members: [author.member] });
+    const client = new Client([author.member.user], [channel]);
+    const guild = new Guild([author.member]);
     const data = {
       author: author.member.user,
       content: `${author.member.user} ++`,
@@ -609,11 +589,8 @@ describe('callback', () => {
   });
 
   it('returns correct output for a user mentioning Odin Bot', async () => {
-    const client = new Client({
-      users: [author.member.user],
-      channels: [channel],
-    });
-    const guild = new Guild({ members: [author.member] });
+    const client = new Client([author.member.user], [channel]);
+    const guild = new Guild([author.member]);
 
     const data = {
       author: author.member.user,
@@ -630,15 +607,12 @@ describe('callback', () => {
 
   it('returns correct output for a user awarding points in a no-points channel', async () => {
     const mentionedUser = { member: new GuildMember({ id: '2' }), points: 20 };
-    const botSpamChannel = new TextChannel('513125912070455296');
-    const bannedChannel = new TextChannel('123456789');
-    const client = new Client({
-      users: [author.member.user, mentionedUser.member.user],
-      channels: [botSpamChannel],
-    });
-    const guild = new Guild({
-      members: [author.member, mentionedUser.member],
-    });
+    const botSpamChannel = TextChannel.botSpamPlayground;
+    const client = new Client(
+      [author.member.user, mentionedUser.member.user],
+      [botSpamChannel],
+    );
+    const guild = new Guild([author.member, mentionedUser.member]);
 
     const botSpamChannelData = {
       author: author.member.user,
@@ -648,21 +622,9 @@ describe('callback', () => {
       guild,
     };
 
-    const bannedChannelData = {
-      author: author.member.user,
-      content: `${mentionedUser.member.user} ++`,
-      channel: bannedChannel,
-      client,
-      guild,
-    };
-
     await awardPoints.cb(botSpamChannelData);
     expect(botSpamChannelData.channel.send).toHaveBeenCalled();
     expect(botSpamChannelData.channel.send.mock.calls[0][0]).toMatchSnapshot();
-
-    await awardPoints.cb(bannedChannelData);
-    expect(bannedChannelData.channel.send).toHaveBeenCalled();
-    expect(bannedChannelData.channel.send.mock.calls[0][0]).toMatchSnapshot();
   });
 });
 
@@ -675,22 +637,20 @@ describe('?++ callback', () => {
     points: 10,
   };
   const author = {
-    member: new GuildMember({ id: '1', roles: [Role.CORE] }),
+    member: new GuildMember({ id: '1', roles: [Role.core] }),
     points: 10,
   };
 
   const channel = new TextChannel();
-  const club40Channel = new TextChannel('707225752608964628');
+  const club40Channel = TextChannel.club40;
 
   it('does not award points when used by non-staff', async () => {
     const mentionedUser = { member: new GuildMember({ id: '2' }), points: 20 };
-    const client = new Client({
-      users: [nonStaffAuthor.member.user, mentionedUser.member.user],
-      channels: [channel],
-    });
-    const guild = new Guild({
-      members: [nonStaffAuthor.member, mentionedUser.member],
-    });
+    const client = new Client([
+      nonStaffAuthor.member.user,
+      mentionedUser.member.user,
+    ]);
+    const guild = new Guild([nonStaffAuthor.member, mentionedUser.member]);
     const data = {
       author: author.member.user,
       content: `${mentionedUser.member.user} ?++`,
@@ -714,13 +674,8 @@ describe('?++ callback', () => {
 
   it('awards points when used by staff', async () => {
     const mentionedUser = { member: new GuildMember({ id: '2' }), points: 20 };
-    const client = new Client({
-      users: [author.member.user, mentionedUser.member.user],
-      channels: [channel],
-    });
-    const guild = new Guild({
-      members: [author.member, mentionedUser.member],
-    });
+    const client = new Client([author.member.user, mentionedUser.member.user]);
+    const guild = new Guild([author.member, mentionedUser.member]);
     const data = {
       author: author.member.user,
       content: `${mentionedUser.member.user} ?++`,
@@ -744,13 +699,11 @@ describe('?++ callback', () => {
 
   it('returns correct output for a single user entering club-40', async () => {
     const mentionedUser = { member: new GuildMember({ id: '2' }), points: 39 };
-    const client = new Client({
-      users: [author.member.user, mentionedUser.member.user],
-      channels: [channel, club40Channel],
-    });
-    const guild = new Guild({
-      members: [author.member, mentionedUser.member],
-    });
+    const client = new Client(
+      [author.member.user, mentionedUser.member.user],
+      [channel, club40Channel],
+    );
+    const guild = new Guild([author.member, mentionedUser.member]);
     const data = {
       author: author.member.user,
       content: `${mentionedUser.member.user} ?++`,
@@ -776,13 +729,11 @@ describe('?++ callback', () => {
 
   it('Users gets club-40 role', async () => {
     const mentionedUser = { member: new GuildMember({ id: '2' }), points: 39 };
-    const client = new Client({
-      users: [author.member.user, mentionedUser.member.user],
-      channels: [channel, club40Channel],
-    });
-    const guild = new Guild({
-      members: [author.member, mentionedUser.member],
-    });
+    const client = new Client(
+      [author.member.user, mentionedUser.member.user],
+      [channel, club40Channel],
+    );
+    const guild = new Guild([author.member, mentionedUser.member]);
     const data = {
       author: author.member.user,
       content: `${mentionedUser.member.user} ?++`,
@@ -799,22 +750,18 @@ describe('?++ callback', () => {
       },
     });
 
-    expect(
-      mentionedUser.member.roles.cache.has(Role.CLUB40.id),
-    ).not.toBeTruthy();
+    expect(mentionedUser.member.roles.cache.has(Role.club40.id)).toBeFalsy();
     await awardPoints.cb(data);
-    expect(mentionedUser.member.roles.cache.has(Role.CLUB40.id)).toBeTruthy();
+    expect(mentionedUser.member.roles.cache.has(Role.club40.id)).toBeTruthy();
   });
 
   it('returns correct output for a single user re-entering club-40', async () => {
     const mentionedUser = { member: new GuildMember({ id: '2' }), points: 40 };
-    const client = new Client({
-      users: [author.member.user, mentionedUser.member.user],
-      channels: [channel, club40Channel],
-    });
-    const guild = new Guild({
-      members: [author.member, mentionedUser.member],
-    });
+    const client = new Client(
+      [author.member.user, mentionedUser.member.user],
+      [channel, club40Channel],
+    );
+    const guild = new Guild([author.member, mentionedUser.member]);
     const data = {
       author: author.member.user,
       content: `${mentionedUser.member.user} ?++`,
@@ -843,25 +790,20 @@ describe('?++ callback', () => {
     const mentionedUser2 = { member: new GuildMember({ id: '3' }), points: 21 };
     const mentionedUser3 = { member: new GuildMember({ id: '4' }), points: 2 };
     const mentionedUser4 = { member: new GuildMember({ id: '5' }), points: 0 };
-    const client = new Client({
-      users: [
-        author.member.user,
-        mentionedUser1.member.user,
-        mentionedUser2.member.user,
-        mentionedUser3.member.user,
-        mentionedUser4.member.user,
-      ],
-      channels: [channel],
-    });
-    const guild = new Guild({
-      members: [
-        author.member,
-        mentionedUser1.member,
-        mentionedUser2.member,
-        mentionedUser3.member,
-        mentionedUser4.member,
-      ],
-    });
+    const client = new Client([
+      author.member.user,
+      mentionedUser1.member.user,
+      mentionedUser2.member.user,
+      mentionedUser3.member.user,
+      mentionedUser4.member.user,
+    ]);
+    const guild = new Guild([
+      author.member,
+      mentionedUser1.member,
+      mentionedUser2.member,
+      mentionedUser3.member,
+      mentionedUser4.member,
+    ]);
 
     const data = {
       author: author.member.user,
@@ -913,29 +855,24 @@ describe('?++ callback', () => {
     const mentionedUser4 = { member: new GuildMember({ id: '5' }), points: 0 };
     const mentionedUser5 = { member: new GuildMember({ id: '6' }), points: 21 };
     const mentionedUser6 = { member: new GuildMember({ id: '7' }), points: 29 };
-    const client = new Client({
-      users: [
-        author.member.user,
-        mentionedUser1.member.user,
-        mentionedUser2.member.user,
-        mentionedUser3.member.user,
-        mentionedUser4.member.user,
-        mentionedUser5.member.user,
-        mentionedUser6.member.user,
-      ],
-      channels: [channel],
-    });
-    const guild = new Guild({
-      members: [
-        author.member,
-        mentionedUser1.member,
-        mentionedUser2.member,
-        mentionedUser3.member,
-        mentionedUser4.member,
-        mentionedUser5.member,
-        mentionedUser6.member,
-      ],
-    });
+    const client = new Client([
+      author.member.user,
+      mentionedUser1.member.user,
+      mentionedUser2.member.user,
+      mentionedUser3.member.user,
+      mentionedUser4.member.user,
+      mentionedUser5.member.user,
+      mentionedUser6.member.user,
+    ]);
+    const guild = new Guild([
+      author.member,
+      mentionedUser1.member,
+      mentionedUser2.member,
+      mentionedUser3.member,
+      mentionedUser4.member,
+      mentionedUser5.member,
+      mentionedUser6.member,
+    ]);
 
     const data = {
       author: author.member.user,
@@ -989,11 +926,8 @@ describe('?++ callback', () => {
   });
 
   it('returns correct output for a user mentioning themselves', async () => {
-    const client = new Client({
-      users: [author.member.user],
-      channels: [channel],
-    });
-    const guild = new Guild({ members: [author.member] });
+    const client = new Client([author.member.user], [channel]);
+    const guild = new Guild([author.member]);
     const data = {
       author: author.member.user,
       content: `${author.member.user} ?++`,
@@ -1017,14 +951,8 @@ describe('?++ callback', () => {
   });
 
   it('returns correct output for a user mentioning Odin Bot', async () => {
-    const client = new Client({
-      users: [author.member.user],
-      channels: [channel],
-    });
-
-    const guild = new Guild({
-      members: [author.member],
-    });
+    const client = new Client([author.member.user], [channel]);
+    const guild = new Guild([author.member]);
 
     const data = {
       author: author.member.user,
@@ -1042,15 +970,12 @@ describe('?++ callback', () => {
 
   it('returns correct output for a user awarding points in a no-points channel', async () => {
     const mentionedUser = { member: new GuildMember({ id: '2' }), points: 20 };
-    const botSpamChannel = new TextChannel('513125912070455296');
-    const bannedChannel = new TextChannel('123456789');
-    const client = new Client({
-      users: [author.member.user, mentionedUser.member.user],
-      channels: [botSpamChannel, bannedChannel],
-    });
-    const guild = new Guild({
-      members: [author.member, mentionedUser.member],
-    });
+    const botSpamChannel = TextChannel.botSpamPlayground;
+    const client = new Client(
+      [author.member.user, mentionedUser.member.user],
+      [botSpamChannel],
+    );
+    const guild = new Guild([author.member, mentionedUser.member]);
 
     const botSpamChannelData = {
       author: author.member.user,
@@ -1061,38 +986,24 @@ describe('?++ callback', () => {
       member: author.member,
     };
 
-    const bannedChannelData = {
-      author: author.member.user,
-      content: `${mentionedUser.member.user} ?++`,
-      channel: bannedChannel,
-      client,
-      guild,
-      member: author.member,
-    };
-
     await awardPoints.cb(botSpamChannelData);
     expect(botSpamChannelData.channel.send).toHaveBeenCalled();
     expect(botSpamChannelData.channel.send.mock.calls[0][0]).toMatchSnapshot();
-
-    await awardPoints.cb(bannedChannelData);
-    expect(bannedChannelData.channel.send).toHaveBeenCalled();
-    expect(bannedChannelData.channel.send.mock.calls[0][0]).toMatchSnapshot();
   });
 
   it('sends the correct exclamations for mixed awarding (++ and ?++) in a single message', async () => {
     const mentionedUser1 = { member: new GuildMember({ id: '2' }), points: 0 };
     const mentionedUser2 = { member: new GuildMember({ id: '3' }), points: 0 };
-    const client = new Client({
-      users: [
-        author.member.user,
-        mentionedUser1.member.user,
-        mentionedUser2.member.user,
-      ],
-      channels: [channel],
-    });
-    const guild = new Guild({
-      members: [author.member, mentionedUser1.member, mentionedUser2.member],
-    });
+    const client = new Client([
+      author.member.user,
+      mentionedUser1.member.user,
+      mentionedUser2.member.user,
+    ]);
+    const guild = new Guild([
+      author.member,
+      mentionedUser1.member,
+      mentionedUser2.member,
+    ]);
 
     const data = {
       author: author.member.user,

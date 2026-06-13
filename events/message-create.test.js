@@ -22,7 +22,7 @@ describe('Spam detection', () => {
   });
 
   function createSpamMessage(authorId = 'user-123') {
-    const guild = new Guild({ channels: [] });
+    const guild = new Guild();
     const member = new GuildMember({
       id: authorId,
       username: 'spammer',

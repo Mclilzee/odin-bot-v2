@@ -22,7 +22,7 @@ setInterval(() => {
 
 let currentIntroductionsMessage = null;
 
-const introductionsWelcomeMessage = `Welcome to The Odin Project! Take a moment to survey all of the channels on the sidebar, especially the <#${config.channels.FAQChannelId}> channel for answers to commonly asked questions. We're excited for you to join us on your programming journey. Happy learning!`;
+const introductionsWelcomeMessage = `Welcome to The Odin Project! Take a moment to survey all of the channels on the sidebar, especially the <#${config.channels.faq.id}> channel for answers to commonly asked questions. We're excited for you to join us on your programming journey. Happy learning!`;
 
 function createAuthorEntry(message) {
   const entry = {
@@ -137,14 +137,14 @@ module.exports = {
       }
     });
 
-    if (message.channel.id === config.channels.gettingHiredChannelId) {
+    if (message.channel.id === config.channels.gettingHired.id) {
       const gettingHiredMessageService = new GettingHiredMessageService();
       await gettingHiredMessageService.handleMessage(message, isAdminMessage);
 
       return;
     }
 
-    if (message.channel.id === config.channels.introductionsChannelId) {
+    if (message.channel.id === config.channels.introductions.id) {
       // introductions
       if (!isAdminMessage) {
         if (

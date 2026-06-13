@@ -78,7 +78,7 @@ describe('Kicking spammer', () => {
   it('Does not kick admin roles', async () => {
     console.error = jest.fn();
     const guild = new Guild({ channels: getChannels() });
-    const member = createMemberMock(guild, Role.admin);
+    const member = createMemberMock(guild, Role.ADMIN);
     await SpamKickingService.kick(member);
     expect(member.send).not.toHaveBeenCalled();
     expect(member.kick).not.toHaveBeenCalled();
@@ -132,7 +132,7 @@ describe('Warning spammer', () => {
   it('Does not warn admin roles', async () => {
     console.error = jest.fn();
     const guild = new Guild({ channels: getChannels() });
-    const member = createMemberMock(guild, Role.admin);
+    const member = createMemberMock(guild, Role.ADMIN);
     await SpamKickingService.warn(member);
     expect(member.send).not.toHaveBeenCalled();
     member.guild.channels.cache.forEach((channel) => {

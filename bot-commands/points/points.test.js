@@ -617,7 +617,7 @@ describe('callback', () => {
 
     const data = {
       author: author.member.user,
-      content: `${GuildMember.odinBot.user} ++`,
+      content: `${GuildMember.ODIN_BOT.user} ++`,
       channel,
       client,
       guild,
@@ -675,7 +675,7 @@ describe('?++ callback', () => {
     points: 10,
   };
   const author = {
-    member: new GuildMember({ id: '1', roles: [Role.core] }),
+    member: new GuildMember({ id: '1', roles: [Role.CORE] }),
     points: 10,
   };
 
@@ -800,10 +800,10 @@ describe('?++ callback', () => {
     });
 
     expect(
-      mentionedUser.member.roles.cache.has(Role.club40.id),
+      mentionedUser.member.roles.cache.has(Role.CLUB40.id),
     ).not.toBeTruthy();
     await awardPoints.cb(data);
-    expect(mentionedUser.member.roles.cache.has(Role.club40.id)).toBeTruthy();
+    expect(mentionedUser.member.roles.cache.has(Role.CLUB40.id)).toBeTruthy();
   });
 
   it('returns correct output for a single user re-entering club-40', async () => {
@@ -1028,7 +1028,7 @@ describe('?++ callback', () => {
 
     const data = {
       author: author.member.user,
-      content: `${GuildMember.odinBot.user} ?++`,
+      content: `${GuildMember.ODIN_BOT.user} ?++`,
       channel,
       client,
       guild,

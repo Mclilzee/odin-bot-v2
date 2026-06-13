@@ -3,14 +3,14 @@ const { Collection } = require('discord.js');
 const User = require('./user');
 
 class GuildMember {
-  static odinBot = new GuildMember({
+  static ODIN_BOT = new GuildMember({
     id: users.odinBot.id,
     username: users.odinBot.name,
   });
 
   #roles = new Collection();
   constructor({ id, username, nickname, bot, guild, roles = [] }) {
-    this.user = new User(id, username, bot);
+    this.user = new User({ id, username, bot });
     this.nickname = nickname;
     this.guild = guild;
 

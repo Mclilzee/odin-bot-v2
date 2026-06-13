@@ -1,8 +1,13 @@
 const { users } = require('../../../config');
 
 class User {
-  static odinBot = new User(users.odinBot.id, users.odinBot.name, true);
-  constructor(id, username, bot) {
+  static ODIN_BOT = new User({
+    id: users.odinBot.id,
+    username: users.odinBot.name,
+    bot: true,
+  });
+
+  constructor({ id, username, bot }) {
     this.id = id;
     this.username = username;
     this.bot = bot;
